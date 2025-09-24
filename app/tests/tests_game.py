@@ -1,2 +1,2 @@
-def test_game():
+def tests_game():
     assert True
