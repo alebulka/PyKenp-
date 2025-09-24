@@ -2,7 +2,7 @@ name: CD - PyKenp (artefato)
 
 on:
   push:
-    branches: ["main"]  # roda sempre que houver push na main
+    branches: ["main"] 
 
 jobs:
   deploy:
@@ -16,7 +16,7 @@ jobs:
         run: zip -r pykenp-artifact.zip app tests requirements.txt
 
       - name: Salvar artefato
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: pykenp-artifact
           path: pykenp-artifact.zip
