@@ -1,0 +1,22 @@
+name: CD - PyKenp (artefato)
+
+on:
+  push:
+    branches: ["main"]  # roda sempre que houver push na main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v3
+
+      - name: Criar arquivo zip do projeto
+        run: zip -r pykenp-artifact.zip app tests requirements.txt
+
+      - name: Salvar artefato
+        uses: actions/upload-artifact@v3
+        with:
+          name: pykenp-artifact
+          path: pykenp-artifact.zip
