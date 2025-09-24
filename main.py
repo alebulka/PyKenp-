@@ -1,8 +1,12 @@
 from fastapi import FastAPI, HTTPException, Query
 from pydantic import BaseModel
-from app.game import MOVES, validate_move, get_computer_move, determine_winner
+from app.game import MOVES, validate_move, get_computer_move, determine_winner, GameManager
 
 app = FastAPI(title="Jokenpô API", version="0.1.0")
+
+# instância global para gerenciar estatísticas
+game_manager = GameManager()
+
 
 class PlayResult(BaseModel):
     jogador: str
@@ -21,7 +25,12 @@ async def play(move: str = Query(..., description="Movimento do jogador: pedra, 
     if not validate_move(move):
         raise HTTPException(status_code=400, detail="Movimento inválido. Use 'pedra', 'papel' ou 'tesoura'.")
 
-    computer = get_computer_move()
-    result = determine_winner(move, computer)
+    # usa o GameManager para registrar a partida
+    partida = game_manager.play(move)
 
-    return PlayResult(jogador=move, computador=computer, resultado=result)
+    return PlayResult(**partida)
+
+
+@app.get("/stats", tags=["game"])
+async def stats():
+    return game_manager.get_stats()
