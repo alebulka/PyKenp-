@@ -1,7 +1,7 @@
 from random import choice
 from typing import Tuple
 
-# Movimento válidos
+# Movimentos válidos
 MOVES = ("pedra", "papel", "tesoura")
 
 
@@ -30,3 +30,24 @@ def determine_winner(player: str, computer: str) -> str:
     if wins.get(player) == computer:
         return "jogador"
     return "computador"
+
+
+class GameManager:
+    def __init__(self):
+        self.history = []
+
+    def play(self, player_move: str):
+        computer = get_computer_move()
+        result = determine_winner(player_move, computer)
+        self.history.append({
+            "jogador": player_move,
+            "computador": computer,
+            "resultado": result
+        })
+        return self.history[-1]
+
+    def get_stats(self):
+        wins = {"jogador": 0, "computador": 0, "empate": 0}
+        for match in self.history:
+            wins[match["resultado"]] += 1
+        return wins
