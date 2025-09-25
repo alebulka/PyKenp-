@@ -2,24 +2,36 @@ name: CI - PyKenp
 
 on:
   push:
-    branches: ["main"]
+    branches: [ main ]
   pull_request:
-    branches: ["main"]
+    branches: [ main ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+    - name: Checkout do repositório
+      uses: actions/checkout@v3
 
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.10"
+    - name: Configurar Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.10
 
-      - name: Install dependencies
-        run: pip install -r requirements.txt
+    - name: Instalar dependências
+      run: |
+        pip install --upgrade pip
+        pip install -r requirements.txt
 
-      - name: Run tests
-        run: pytest
+    - name: Rodar testes
+      run: |
+        pytest
+
+    # 🔹 Step do Telegram
+    - name: Enviar alerta no Telegram
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ secrets.TELEGRAM_CHAT_ID }}
+        token: ${{ secrets.TELEGRAM_TOKEN }}
+        message: "🚀 Novo commit/merge na branch ${{ github.ref }}!"
