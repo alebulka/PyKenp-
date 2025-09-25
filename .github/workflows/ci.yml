@@ -2,37 +2,44 @@ name: CI - PyKenp
 
 on:
   push:
-    branches: ["main"]
+    branches: [ main ]
   pull_request:
-    branches: ["main"]
+    branches: [ main ]
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-22.04
 
     steps:
+    # 1️⃣ Fazer checkout do repositório
     - name: Checkout do repositório
       uses: actions/checkout@v3
 
+    # 2️⃣ Configurar Python
     - name: Configurar Python
       uses: actions/setup-python@v4
       with:
-        python-version: "3.10"
+        python-version: 3.10
         architecture: x64
 
+    # 3️⃣ Instalar dependências
     - name: Instalar dependências
       run: |
         pip install --upgrade pip
         pip install -r requirements.txt
+        pip install pytest
 
+    # 4️⃣ Rodar testes unitários
     - name: Rodar testes
       run: |
-        pytest
+        pytest -v
 
-    # 🔹 Step do Telegram
+    # 5️⃣ Enviar alerta no Telegram
     - name: Enviar alerta no Telegram
       uses: appleboy/telegram-action@master
       with:
         to: ${{ secrets.TELEGRAM_CHAT_ID }}
         token: ${{ secrets.TELEGRAM_TOKEN }}
-        message: "🚀 Novo commit/merge na branch ${{ github.ref }}!"
+        message: |
+          🚀 Novo commit/merge na branch ${{ github.ref }}!
+          ✅ Workflow CI + Testes rodando
