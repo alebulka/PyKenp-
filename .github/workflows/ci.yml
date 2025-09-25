@@ -2,9 +2,9 @@ name: CI - PyKenp
 
 on:
   push:
-    branches: [ main ]
+    branches: ["main"]
   pull_request:
-    branches: [ main ]
+    branches: ["main"]
 
 jobs:
   build:
@@ -17,7 +17,7 @@ jobs:
     - name: Configurar Python
       uses: actions/setup-python@v4
       with:
-        python-version: 3.10
+        python-version: "3.10"
         architecture: x64
 
     - name: Instalar dependências
